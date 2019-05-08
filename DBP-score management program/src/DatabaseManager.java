@@ -1,3 +1,4 @@
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -34,22 +35,26 @@ public class DatabaseManager {
 	
 	public int insertScore(Score score) {
 		Connection con = null;
-		Statement stmt = null;
+		CallableStatement cstmt = null;
 		
 		int result = 0;
 		try {
 			con = getConn();
-			stmt = con.createStatement();
-			String sql = "INSERT INTO SCORE VALUES('" + score.getName() + "' , " + score.getKor() + " , "
-					+ score.getEng() + " , " + score.getMath() + " , " + score.getTotal() + " , " + score.getAverage()
-					+ ")";
-			result = stmt.executeUpdate(sql);
+			cstmt = con.prepareCall("{call insertScoreProcedure(?,?,?,?,?,?)}");
+			cstmt.setString(1,score.getName());
+			cstmt.setInt(2,score.getKor());
+			cstmt.setInt(3,score.getEng());
+			cstmt.setInt(4,score.getMath());
+			cstmt.setInt(5,score.getTotal());
+			cstmt.setInt(6,score.getAverage());
+			
+			result = cstmt.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt != null) {
-					stmt.close();
+				if(cstmt != null) {
+					cstmt.close();
 				}
 				if(con != null) {
 					con.close();
@@ -63,20 +68,21 @@ public class DatabaseManager {
 	
 	public int DeleteScore(Score score) {
 		Connection con = null;
-		Statement stmt = null;
+		CallableStatement cstmt = null;
 		
 		int result = 0;
 		try {
 			con = getConn();
-			stmt = con.createStatement();
-			String sql = "DELETE FROM SCORE WHERE name='" + score.getName() + "'";
-			result = stmt.executeUpdate(sql);
+			cstmt = con.prepareCall("{call deleteScoreProcedure(?)}");
+			cstmt.setString(1, score.getName());
+			
+			result = cstmt.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt != null) {
-					stmt.close();
+				if(cstmt != null) {
+					cstmt.close();
 				}
 				if(con != null) {
 					con.close();
@@ -90,21 +96,26 @@ public class DatabaseManager {
 	
 	public int UpdateScore(Score score) {
 		Connection con = null;
-		Statement stmt = null;
+		CallableStatement cstmt = null;
 		
 		int result = 0;
 		try {
 			con = getConn();
-			stmt = con.createStatement();
-			String sql = "UPDATE SCORE SET name = '" + score.getName() + "', kor = " + score.getKor() + ", eng = " + score.getEng() + ", math = " + score.getMath() +
-					", total = " + score.getTotal() + ", average = " + score.getAverage() + " where name ='" + score.getName() + "'";
-			result = stmt.executeUpdate(sql);
+			cstmt = con.prepareCall("{call updateScoreProcedure(?,?,?,?,?,?)}");
+			cstmt.setString(1,score.getName());
+			cstmt.setInt(2,score.getKor());
+			cstmt.setInt(3,score.getEng());
+			cstmt.setInt(4,score.getMath());
+			cstmt.setInt(5,score.getTotal());
+			cstmt.setInt(6,score.getAverage());
+			
+			result = cstmt.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt != null) {
-					stmt.close();
+				if(cstmt != null) {
+					cstmt.close();
 				}
 				if(con != null) {
 					con.close();
@@ -119,32 +130,33 @@ public class DatabaseManager {
 	public Vector getScore() {
 		Vector data = new Vector();
 		Connection con = null;
-		Statement stmt = null;
 		ResultSet rs = null;
+		CallableStatement cstmt = null;
 		
 		try {
 			con = getConn();
-			String sql = "SELECT RANK() OVER (ORDER BY total DESC) as rank, name, kor, eng, math, total, average FROM SCORE ORDER BY rank";
-			stmt = con.createStatement();
-			rs = stmt.executeQuery(sql);
+			cstmt = con.prepareCall("{call selectScoreProcedure()}");
+			rs = cstmt.executeQuery();
 			
 			while(rs.next()) {
-				int rank = rs.getInt("rank");
+				int ran = rs.getInt("ran");
 				String name = rs.getString("name");
 				int kor = rs.getInt("kor");
 				int eng = rs.getInt("eng");
 				int math = rs.getInt("math");
 				int total = rs.getInt("total");
 				int average = rs.getInt("average");
+				String grade = rs.getString("grade");
 				
 				Vector row = new Vector();
-				row.add(rank);
+				row.add(ran);
 				row.add(name);
 				row.add(kor);
 				row.add(eng);
 				row.add(math);
 				row.add(total);
 				row.add(average);
+				row.add(grade);
 				data.add(row);
 			}
 		} catch (Exception e) {
@@ -152,7 +164,7 @@ public class DatabaseManager {
 		} finally {
 			try {
 				if(rs != null) rs.close();
-				if(stmt != null) stmt.close();
+				if(cstmt != null) cstmt.close();
 				if(con != null) con.close();
 			} catch(SQLException e) {
 				e.printStackTrace();

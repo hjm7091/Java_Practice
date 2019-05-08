@@ -77,6 +77,7 @@ class ScoreFrame extends JFrame implements ActionListener, MouseListener{
 		col.add("수학 점수");
 		col.add("총점");
 		col.add("평균");
+		col.add("학점");
 		
 		DefaultTableModel model = new DefaultTableModel(databaseManager.getScore(), col) {
 			public boolean isCellEditable(int row, int column) {
@@ -116,7 +117,7 @@ class ScoreFrame extends JFrame implements ActionListener, MouseListener{
 					JOptionPane.showMessageDialog(this, "추가에 실패했습니다.");
 				}
 			}catch(Exception ee) {
-				JOptionPane.showMessageDialog(this, "이름 혹은 성적을 입력하세요!");
+				JOptionPane.showMessageDialog(this, "올바른 값을 입력하세요!");
 			}
 		}
 		else if(ButtonFlag.equals("삭제")) {
