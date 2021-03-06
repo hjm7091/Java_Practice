@@ -1,4 +1,4 @@
-package quiz5_4;
+package chapter5.quiz5_4;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
