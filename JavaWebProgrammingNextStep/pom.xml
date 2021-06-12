@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>jin</groupId>
-        <artifactId>Java_Study</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+      <groupId>jin</groupId>
+      <artifactId>Java_Study</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>WelcomeToJava</artifactId>
+    <artifactId>JavaWebProgrammingNextStep</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>WelcomeToJava</name>
+    <name>JavaWebProgrammingNextStep</name>
 
 </project>
