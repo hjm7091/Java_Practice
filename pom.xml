@@ -14,6 +14,7 @@
         <module>GalagGame</module>
         <module>Java8InAction</module>
         <module>WelcomeToJava</module>
+        <module>JavaWebProgrammingNextStep</module>
     </modules>
 
     <name>Java_Study</name>
