@@ -15,6 +15,7 @@
         <module>Java8InAction</module>
         <module>WelcomeToJava</module>
         <module>JavaWebProgrammingNextStep</module>
+        <module>TestDrivenDevelopment</module>
     </modules>
 
     <name>Java_Study</name>
